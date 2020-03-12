@@ -1,23 +1,32 @@
 /* библиотека функций-хэлперов */
+function formatDate(time) {
+    let now = [time.getHours(), time.getMinutes()];
 
-/* загрузить из localStorage данные с ключом item */
-function loadDataBase(data, item) {
-
-    if (localStorage.getItem(item) != null) {
-        data = JSON.parse(localStorage.getItem(item));
-    } else {
-        data = [];
+    for (let i = 0; i < now.length; i++) {
+        if (now[i] < 10) {
+            now[i] = '0' + now[i];
+        }
     }
-    return data;
+
+    return now[0] + ':' + now[1];
 }
 
-/* обновить либо пополнить хранилище localStorage данными item */
-function reloadDataBase(item, data, key) {
-    data.push(item);
-    localStorage.setItem(key, JSON.stringify(data));
+function readURL(e) {
+    if (this.files && this.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            document.querySelector('#upload-img').setAttribute('src', e.target.result);
+            document.querySelector('#upload-img').style.display = 'block';
+            let cropTemplate = require('../templates/cropImage.hbs');
+            let crop = cropTemplate({ img: e.target.result });
+            document.querySelector('.uploadPhoto').innerHTML = crop;
+            document.querySelector('.uploadPhoto').classList.add('crop');
+        };
+        reader.readAsDataURL(this.files[0]);
+    }
 }
 
 export {
-    loadDataBase,
-    reloadDataBase
-}
+    formatDate,
+    readURL
+};
